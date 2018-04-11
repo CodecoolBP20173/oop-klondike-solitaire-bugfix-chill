@@ -23,9 +23,9 @@ public class Card extends ImageView {
     public static final int WIDTH = 150;
     public static final int HEIGHT = 215;
 
-    public Card(Suit suit, Rank rank, boolean faceDown) {
-        this.suit = suit.getValue();
-        this.rank = rank.getValue();
+    public Card(int suit, int rank, boolean faceDown) {
+        this.suit = suit;
+        this.rank = rank;
         this.faceDown = faceDown;
         this.dropShadow = new DropShadow(2, Color.gray(0, 0.75));
         backFace = cardBackImage;
@@ -90,7 +90,7 @@ public class Card extends ImageView {
         List<Card> result = new ArrayList<>();
         for (Suit suit : Suit.values()) {
             for (Rank rank : Rank.values()) {
-                result.add(new Card(suit, rank, true));
+                result.add(new Card(suit.getValue(), rank.getValue(), true));
             }
         }
         return result;
@@ -102,7 +102,7 @@ public class Card extends ImageView {
             String suitName = suit.name();
             for (Rank rank : Rank.values()) {
                 String cardName = suitName + rank.getValue();
-                String cardId = "S" + suit + "R" + rank;
+                String cardId = "S" + suit.getValue() + "R" + rank.getValue();
                 String imageFileName = "card_images/" + cardName + ".png";
                 cardFaceImages.put(cardId, new Image(imageFileName));
             }
