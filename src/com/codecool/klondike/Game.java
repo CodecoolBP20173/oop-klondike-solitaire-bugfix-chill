@@ -57,43 +57,68 @@ public class Game extends Pane {
         Pile activePile = card.getContainingPile();
         if (activePile.getPileType() == Pile.PileType.STOCK)
             return;
-        double offsetX = e.getSceneX() - dragStartX;
-        double offsetY = e.getSceneY() - dragStartY;
 
         draggedCards.clear();
-        draggedCards.add(card);
+        card.getContainingPile().getCards().indexOf(card);
+        for (int i = activePile.getCards().indexOf(card); i < activePile.numOfCards(); i++) {
+            draggedCards.add(activePile.getCards().get(i));
+        }
 
-        card.getDropShadow().setRadius(20);
-        card.getDropShadow().setOffsetX(10);
-        card.getDropShadow().setOffsetY(10);
+        for (Card card1 : draggedCards){
+            double offsetX = e.getSceneX() - dragStartX;
+            double offsetY = e.getSceneY() - dragStartY;
 
-        card.toFront();
-        card.setTranslateX(offsetX);
-        card.setTranslateY(offsetY);
+            card1.getDropShadow().setRadius(20);
+            card1.getDropShadow().setOffsetX(10);
+            card1.getDropShadow().setOffsetY(10);
+
+            card1.toFront();
+            card1.setTranslateX(offsetX);
+            card1.setTranslateY(offsetY);
+        }
+
     };
 
     private EventHandler<MouseEvent> onMouseReleasedHandler = e -> {
         if (draggedCards.isEmpty())
             return;
-        Card card = (Card) e.getSource();
-        Pile pile1 = getValidIntersectingPile(card, foundationPiles);
-        Pile pile2 = getValidIntersectingPile(card, tableauPiles);
+        Card card = draggedCards.get(0);
+        Pile fund = getValidIntersectingPile(card, foundationPiles);
+        Pile tabl = getValidIntersectingPile(card, tableauPiles);
         //TODO
-        if (pile1 != null) {
-            handleValidMove(card, pile1);
+        if (fund != null && draggedCards. size() == 1) {
+            handleValidMove(card, fund);
+            flipTopCards();
         }
-        else if (pile2 != null) {
-            handleValidMove(card, pile2);
+        else if (tabl != null) {
+            handleValidMove(card, tabl);
+            flipTopCards();
         }
         else {
-            draggedCards.forEach(MouseUtil::slideBack);
+            Iterator<Card> draggedIterator = draggedCards.iterator();
+
+            while (draggedIterator.hasNext()) {
+                Card actualCard = draggedIterator.next();
+                card.getContainingPile().addCard(actualCard);
+            }
             draggedCards.clear();
+            flipTopCards();
         }
     };
 
     public boolean isGameWon() {
         //TODO
         return false;
+    }
+
+    private void flipTopCards() {
+        tableauPiles.forEach(pile -> {
+            if (pile != null) {
+                if (pile.getTopCard().isFaceDown()) {
+                    pile.getTopCard().flip();
+                }
+            }
+        });
     }
 
     private void shuffleDeck() {
@@ -228,9 +253,9 @@ public class Game extends Pane {
                 addMouseEventHandlers(card);
                 getChildren().add(card);
             }
-            tableau.getTopCard().flip();
             size++;
         }
+        flipTopCards();
 
         deckIterator.forEachRemaining(card -> {
             stockPile.addCard(card);
