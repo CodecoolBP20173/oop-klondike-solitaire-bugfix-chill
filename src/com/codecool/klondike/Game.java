@@ -57,6 +57,10 @@ public class Game extends Pane {
         Pile activePile = card.getContainingPile();
         if (activePile.getPileType() == Pile.PileType.STOCK)
             return;
+        if (activePile.getPileType() == Pile.PileType.DISCARD && card != activePile.getTopCard())
+            return;
+        if (activePile.getPileType() == Pile.PileType.FOUNDATION && card != activePile.getTopCard())
+            return;
 
         draggedCards.clear();
         card.getContainingPile().getCards().indexOf(card);
