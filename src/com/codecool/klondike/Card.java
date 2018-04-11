@@ -79,7 +79,7 @@ public class Card extends ImageView {
 
     public static boolean isOppositeColor(Card card1, Card card2) {
         //TODO
-        return (card1.suit % 2 != card2.suit);
+        return ((card1.suit - 1) / 2 != (card2.suit - 1) / 2);
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
