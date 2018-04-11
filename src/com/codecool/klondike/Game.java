@@ -60,13 +60,15 @@ public class Game extends Pane {
 
         draggedCards.clear();
         card.getContainingPile().getCards().indexOf(card);
+        draggedCards.addAll(activePile.getCards().subList(activePile.getCards().indexOf(card), activePile.numOfCards()));
+        //activePile.getCards().subList(activePile.getCards().indexOf(card), activePile.numOfCards()).clear();
+        /*
         for (int i = activePile.getCards().indexOf(card); i < activePile.numOfCards(); i++) {
-            draggedCards.add(activePile.getCards().get(i));
-        }
+        }*/
 
+        double offsetX = e.getSceneX() - dragStartX;
+        double offsetY = e.getSceneY() - dragStartY;
         for (Card card1 : draggedCards){
-            double offsetX = e.getSceneX() - dragStartX;
-            double offsetY = e.getSceneY() - dragStartY;
 
             card1.getDropShadow().setRadius(20);
             card1.getDropShadow().setOffsetX(10);
@@ -88,22 +90,20 @@ public class Game extends Pane {
         //TODO
         if (fund != null && draggedCards. size() == 1) {
             handleValidMove(card, fund);
-            flipTopCards();
         }
         else if (tabl != null) {
             handleValidMove(card, tabl);
-            flipTopCards();
         }
         else {
             Iterator<Card> draggedIterator = draggedCards.iterator();
 
             while (draggedIterator.hasNext()) {
                 Card actualCard = draggedIterator.next();
-                card.getContainingPile().addCard(actualCard);
+                MouseUtil.slideBack(actualCard);
             }
             draggedCards.clear();
-            flipTopCards();
         }
+        flipTopCards();
     };
 
     public boolean isGameWon() {
@@ -112,13 +112,26 @@ public class Game extends Pane {
     }
 
     private void flipTopCards() {
+        Iterator<Pile> tableauIterator = tableauPiles.iterator();
+
+        while (tableauIterator.hasNext()) {
+            Pile tableau = tableauIterator.next();
+            if (tableau.numOfCards() > 0) {
+                if (tableau.getTopCard().isFaceDown()) {
+                    tableau.getTopCard().flip();
+                    addMouseEventHandlers(tableau.getTopCard());
+                }
+            }
+        }
+        /*
         tableauPiles.forEach(pile -> {
             if (pile != null) {
                 if (pile.getTopCard().isFaceDown()) {
                     pile.getTopCard().flip();
+                    addMouseEventHandlers(pile.getTopCard());
                 }
             }
-        });
+        });*/
     }
 
     private void shuffleDeck() {
@@ -250,7 +263,6 @@ public class Game extends Pane {
                 Card card = deckIterator.next();
                 deckIterator.remove();
                 tableau.addCard(card);
-                addMouseEventHandlers(card);
                 getChildren().add(card);
             }
             size++;
