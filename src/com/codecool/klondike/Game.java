@@ -1,9 +1,7 @@
 package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
-import javafx.scene.control.Alert;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -14,6 +12,7 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -92,8 +91,13 @@ public class Game extends Pane {
         return false;
     }
 
+    private void shuffleDeck() {
+        Collections.shuffle(deck);
+    }
+
     public Game() {
         deck = Card.createNewDeck();
+        shuffleDeck();
         initPiles();
         dealCards();
     }

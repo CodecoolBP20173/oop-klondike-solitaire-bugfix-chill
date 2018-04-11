@@ -9,8 +9,8 @@ import java.util.*;
 
 public class Card extends ImageView {
 
-    private Suit suit;
-    private Rank rank;
+    private int suit;
+    private int rank;
     private boolean faceDown;
 
     private Image backFace;
@@ -23,7 +23,7 @@ public class Card extends ImageView {
     public static final int WIDTH = 150;
     public static final int HEIGHT = 215;
 
-    public Card(Suit suit, Rank rank, boolean faceDown) {
+    public Card(int suit, int rank, boolean faceDown) {
         this.suit = suit;
         this.rank = rank;
         this.faceDown = faceDown;
@@ -35,11 +35,11 @@ public class Card extends ImageView {
     }
 
     public int getSuit() {
-        return suit.getValue();
+        return suit;
     }
 
     public int getRank() {
-        return rank.getValue();
+        return rank;
     }
 
     public boolean isFaceDown() {
@@ -47,7 +47,7 @@ public class Card extends ImageView {
     }
 
     public String getShortName() {
-        return "S" + suit.getValue() + "R" + rank.getValue();
+        return "S" + suit + "R" + rank;
     }
 
     public DropShadow getDropShadow() {
@@ -74,12 +74,12 @@ public class Card extends ImageView {
 
     @Override
     public String toString() {
-        return "The " + "Rank" + rank.getValue() + " of " + "Suit" + suit.getValue();
+        return "The " + "Rank" + rank + " of " + "Suit" + suit;
     }
 
     public static boolean isOppositeColor(Card card1, Card card2) {
         //TODO
-        return ((card1.suit.getValue() - 1) / 2 != (card2.suit.getValue() - 1) / 2);
+        return ((card1.suit - 1) / 2 != (card2.suit - 1) / 2);
     }
 
     public static boolean isSameSuit(Card card1, Card card2) {
@@ -90,7 +90,7 @@ public class Card extends ImageView {
         List<Card> result = new ArrayList<>();
         for (Suit suit : Suit.values()) {
             for (Rank rank : Rank.values()) {
-                result.add(new Card(suit, rank, true));
+                result.add(new Card(suit.getValue(), rank.getValue(), true));
             }
         }
         return result;
@@ -102,8 +102,7 @@ public class Card extends ImageView {
             String suitName = suit.name();
             for (Rank rank : Rank.values()) {
                 String cardName = suitName + rank.getValue();
-                System.out.println(cardName);
-                String cardId = "S" + suit + "R" + rank;
+                String cardId = "S" + suit.getValue() + "R" + rank.getValue();
                 String imageFileName = "card_images/" + cardName + ".png";
                 cardFaceImages.put(cardId, new Image(imageFileName));
             }
