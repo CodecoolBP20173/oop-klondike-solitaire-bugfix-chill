@@ -4,7 +4,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.control.MenuButton;
 import javafx.scene.control.MenuItem;
-import javafx.scene.layout.HBox;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 
@@ -29,19 +28,25 @@ public class Klondike extends Application {
         game.setTableBackground(new Image("/table/green.png"));
 
         MenuItem menuItem1 = new MenuItem("New Game");
-        MenuItem menuItem2 = new MenuItem("Restart");
-        MenuItem menuItem3 = new MenuItem("Undo");
+        MenuItem menuItem2 = new MenuItem("Restart (coming soon)");
+        MenuItem menuItem3 = new MenuItem("Undo (coming soon)");
         MenuItem menuItem4 = new MenuItem("Quit");
 
         menuItem1.setOnAction((event) -> {
             Game newGame = game.newGame();
             newScene(primaryStage, newGame);
         });
-        MenuButton menuButton = new MenuButton("Menu", null, menuItem1, menuItem2, menuItem3, menuItem4);
 
-        // menuItem2.setOnAction((event) -> System.exit(1));
+        /*
+        menuItem2.setOnAction((event) -> {
+            game.resetGame();
+            newScene(primaryStage, game);
+        });
+        */
         // menuItem3.setOnAction((event) -> System.exit(1));
         menuItem4.setOnAction((event) -> System.exit(1));
+
+        MenuButton menuButton = new MenuButton("Menu", null, menuItem1, menuItem2, menuItem3, menuItem4);
 
         game.getChildren().addAll(menuButton);
         primaryStage.setTitle("Klondike Solitaire");

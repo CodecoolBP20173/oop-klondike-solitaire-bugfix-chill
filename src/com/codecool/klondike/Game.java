@@ -307,13 +307,6 @@ public class Game extends Pane {
         discardPile.clear();
         draggedCards.clear();
 
-        /*
-        deck = Card.createNewDeck();
-        shuffleDeck();
-        initPiles();
-        dealCards();
-        */
-
         return new Game();
     }
 
