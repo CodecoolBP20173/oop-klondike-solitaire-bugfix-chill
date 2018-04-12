@@ -11,6 +11,8 @@ import javafx.scene.layout.BackgroundPosition;
 import javafx.scene.layout.BackgroundRepeat;
 import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -168,6 +170,20 @@ public class Game extends Pane {
                 if (pile.getTopCard().isFaceDown()) {
                     pile.getTopCard().flip();
                     addMouseEventHandlers(pile.getTopCard());
+                }
+                for (Pile pile : foundationPiles) {
+                    if (pile.getTopCard().getRank() != Card.Rank.king.getValue()) {
+                        break;
+                    }
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Message Here...");
+                    alert.setHeaderText("Look, an Information Dialog");
+                    alert.setContentText("I have a great message for you!");
+                    alert.showAndWait().ifPresent(rs -> {
+                        if (rs == ButtonType.OK) {
+                            System.out.println("Pressed OK.");
+                        }
+                    });
                 }
             }
         }));
