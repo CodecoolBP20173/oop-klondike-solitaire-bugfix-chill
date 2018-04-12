@@ -132,7 +132,6 @@ public class Game extends Pane {
             draggedCards.clear();
             lastClicked = null;
         }
-        //flipTopCards();
     };
 
     public boolean isGameWon() {
