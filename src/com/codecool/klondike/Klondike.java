@@ -40,7 +40,8 @@ public class Klondike extends Application {
         MenuButton menuButton = new MenuButton("Menu", null, menuItem1, menuItem2, menuItem3, menuItem4);
 
         // menuItem2.setOnAction((event) -> System.exit(1));
-        menuItem3.setOnAction((event) -> System.exit(1));
+        // menuItem3.setOnAction((event) -> System.exit(1));
+        menuItem4.setOnAction((event) -> System.exit(1));
 
         game.getChildren().addAll(menuButton);
         primaryStage.setTitle("Klondike Solitaire");
