@@ -2,6 +2,7 @@ package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
 import javafx.event.EventHandler;
+import javafx.scene.control.MenuButton;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -296,6 +297,17 @@ public class Game extends Pane {
             getChildren().add(card);
         });
 
+    }
+
+    public Game newGame() {
+        deck.clear();
+        tableauPiles.clear();
+        foundationPiles.clear();
+        stockPile.clear();
+        discardPile.clear();
+        draggedCards.clear();
+
+        return new Game();
     }
 
     public void setTableBackground(Image tableBackground) {
