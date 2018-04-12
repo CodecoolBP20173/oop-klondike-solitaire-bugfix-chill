@@ -1,8 +1,8 @@
 package com.codecool.klondike;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
-import javafx.scene.control.MenuButton;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -132,7 +132,7 @@ public class Game extends Pane {
             draggedCards.clear();
             lastClicked = null;
         }
-        flipTopCards();
+        //flipTopCards();
     };
 
     public boolean isGameWon() {
@@ -163,6 +163,15 @@ public class Game extends Pane {
         shuffleDeck();
         initPiles();
         dealCards();
+        tableauPiles.forEach(pile -> pile.getCards().addListener(new ListChangeListener<Card>() {
+            @Override
+            public void onChanged(Change<? extends Card> c) {
+                if (pile.getTopCard().isFaceDown()) {
+                    pile.getTopCard().flip();
+                    addMouseEventHandlers(pile.getTopCard());
+                }
+            }
+        }));
     }
 
     public void addMouseEventHandlers(Card card) {
