@@ -21,18 +21,28 @@ public class Klondike extends Application {
     public void start(Stage primaryStage) {
         Card.loadCardImages();
         Game game = new Game();
+
+        newScene(primaryStage, game);
+    }
+
+    public void newScene(Stage primaryStage, Game game) {
         game.setTableBackground(new Image("/table/green.png"));
 
-        MenuItem menuItem1 = new MenuItem("Restart");
-        MenuItem menuItem2 = new MenuItem("Undo");
-        MenuItem menuItem3 = new MenuItem("Quit");
+        MenuItem menuItem1 = new MenuItem("New Game");
+        MenuItem menuItem2 = new MenuItem("Restart");
+        MenuItem menuItem3 = new MenuItem("Undo");
+        MenuItem menuItem4 = new MenuItem("Quit");
 
-        MenuButton menuButton = new MenuButton("Menu", null, menuItem1, menuItem2, menuItem3);
+        menuItem1.setOnAction((event) -> {
+            Game newGame = game.newGame();
+            newScene(primaryStage, newGame);
+        });
+        MenuButton menuButton = new MenuButton("Menu", null, menuItem1, menuItem2, menuItem3, menuItem4);
 
+        // menuItem2.setOnAction((event) -> System.exit(1));
         menuItem3.setOnAction((event) -> System.exit(1));
 
         game.getChildren().addAll(menuButton);
-
         primaryStage.setTitle("Klondike Solitaire");
         primaryStage.setScene(new Scene(game, WINDOW_WIDTH, WINDOW_HEIGHT));
         primaryStage.show();
