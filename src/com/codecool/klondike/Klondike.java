@@ -36,6 +36,8 @@ public class Klondike extends Application {
             Game newGame = game.newGame();
             newScene(primaryStage, newGame);
         });
+        menuItem2.setDisable(true);
+        menuItem3.setDisable(true);
 
         /*
         menuItem2.setOnAction((event) -> {

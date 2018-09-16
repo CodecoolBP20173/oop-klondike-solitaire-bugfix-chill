@@ -1,8 +1,12 @@
 package com.codecool.klondike;
 
+import javafx.beans.Observable;
+import javafx.beans.value.ObservableBooleanValue;
 import javafx.collections.FXCollections;
+import javafx.beans.binding.BooleanBinding;
 import javafx.collections.ListChangeListener;
 import javafx.event.EventHandler;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
@@ -13,15 +17,13 @@ import javafx.scene.layout.BackgroundSize;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.application.Platform;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 public class Game extends Pane {
 
-    private List<Card> deck = new ArrayList<>();
+    private List<Card> deck;
 
     private Pile stockPile;
     private Pile discardPile;
@@ -138,7 +140,12 @@ public class Game extends Pane {
 
     public boolean isGameWon() {
         //TODO
-        return false;
+        for (Pile pile : foundationPiles) {
+            if (pile.getTopCard().getRank() != Card.Rank.king.getValue()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private void flipTopCards() {
@@ -167,24 +174,60 @@ public class Game extends Pane {
         tableauPiles.forEach(pile -> pile.getCards().addListener(new ListChangeListener<Card>() {
             @Override
             public void onChanged(Change<? extends Card> c) {
-                if (pile.getTopCard().isFaceDown()) {
-                    pile.getTopCard().flip();
-                    addMouseEventHandlers(pile.getTopCard());
+                // TODO - check for .isEmpty() before topcard
+                if (!pile.isEmpty()) {
+                    if (pile.getTopCard().isFaceDown()) {
+                        pile.getTopCard().flip();
+                        addMouseEventHandlers(pile.getTopCard());
+                    }
                 }
+            }
+        }));
+        foundationPiles.forEach(pile -> pile.getCards().addListener(new ListChangeListener<Card>() {
+            @Override
+            public void onChanged(Change<? extends Card> c) {
                 for (Pile pile : foundationPiles) {
                     if (pile.getTopCard().getRank() != Card.Rank.king.getValue()) {
-                        break;
+                        return;
                     }
-                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-                    alert.setTitle("Message Here...");
-                    alert.setHeaderText("Look, an Information Dialog");
-                    alert.setContentText("I have a great message for you!");
-                    alert.showAndWait().ifPresent(rs -> {
-                        if (rs == ButtonType.OK) {
-                            System.out.println("Pressed OK.");
-                        }
-                    });
                 }
+                // TODO - repair newGame issue
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Hey, Vsauce. Michael here...");
+                    alert.setHeaderText("Congratulation! You won!");
+                    alert.setContentText("Would you like to play a new game?");
+
+                    ButtonType buttonTypeNewGame = new ButtonType("New Game");
+                    ButtonType buttonTypeReset = new ButtonType("Reset");
+                    ButtonType buttonTypeCancel = new ButtonType("Cancel", ButtonBar.ButtonData.CANCEL_CLOSE);
+
+                    alert.getButtonTypes().setAll(buttonTypeNewGame, buttonTypeReset, buttonTypeCancel);
+
+                    Optional<ButtonType> result = alert.showAndWait();
+                    if (result.get() == buttonTypeNewGame) {
+                        // ... user chose "New Game"
+                        // TODO - here's the problem...
+                        newGame();
+                    } else if (result.get() == buttonTypeReset) {
+                        // ... user chose "Reset"
+                    } else {
+                        // ... user chose CANCEL or closed the dialog
+                    }
+                });
+                /*
+                Platform.runLater(() -> {
+                    Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                    alert.setTitle("Hey, Vsauce. Michael here...");
+                    alert.setHeaderText("Congratulation!");
+                    alert.setContentText("You won!");
+                    alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        System.out.println("Pressed OK.");
+                    }
+                    });
+                });
+                */
             }
         }));
     }
@@ -263,7 +306,6 @@ public class Game extends Pane {
         draggedCards.clear();
         lastClicked = null;
     }
-
 
     private void initPiles() {
         stockPile = new Pile(Pile.PileType.STOCK, "Stock", STOCK_GAP);
